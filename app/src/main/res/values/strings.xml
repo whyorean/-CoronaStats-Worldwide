@@ -49,6 +49,6 @@
     <string name="title_million_deaths">Deaths per million</string>
     <string name="title_million_tests">Tests per million</string>
 
-    <string name="title_source_covid19">Credits : Covid19Api.com</string>
-    <string name="title_source_ninja">Credits : Corona.lmao.ninja</string>
+    <string name="title_source_covid19">Source : Covid19Api.com</string>
+    <string name="title_source_ninja">Source : NovelCOVID Api</string>
 </resources>
