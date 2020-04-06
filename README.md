@@ -1,6 +1,9 @@
 # Corona Stats
 
-A statistics app to provide details about Corona aoutbreak in india
+A statistics app to provide details about Corona outbreak across globe.
+
+The app is in its initial developement stage, bugs are expected, kindly report if found.
+Suggestions are most welcome!
 
 [***Link to Releases page***](https://gitlab.com/AuroraOSS/coronastats-worldwide/-/releases)
 
