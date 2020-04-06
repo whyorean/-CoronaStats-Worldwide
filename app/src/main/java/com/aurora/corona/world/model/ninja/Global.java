@@ -3,16 +3,16 @@
  * Copyright (C) 2020, Rahul Kumar Patel <auroraoss.dev@gmail.com>
  *
  * Aurora Store is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU General private License as published by
  * the Free Software Foundation, either version 2 of the License, or
  *  (at your option) any later version.
  *
  * Corona Stats is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General private License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU General private License
  * along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -27,41 +27,41 @@ import lombok.Data;
 public class Global {
     @SerializedName("updated")
     @Expose
-    public Long updated;
+    private Long updated;
     @SerializedName("cases")
     @Expose
-    public Integer cases;
+    private Integer cases;
     @SerializedName("todayCases")
     @Expose
-    public Integer todayCases;
+    private Integer todayCases;
     @SerializedName("deaths")
     @Expose
-    public Integer deaths;
+    private Integer deaths;
     @SerializedName("todayDeaths")
     @Expose
-    public Integer todayDeaths;
+    private Integer todayDeaths;
     @SerializedName("recovered")
     @Expose
-    public Integer recovered;
+    private Integer recovered;
     @SerializedName("active")
     @Expose
-    public Integer active;
+    private Integer active;
     @SerializedName("critical")
     @Expose
-    public Integer critical;
+    private Integer critical;
     @SerializedName("casesPerOneMillion")
     @Expose
-    public Integer casesPerOneMillion;
+    private Double casesPerOneMillion;
     @SerializedName("deathsPerOneMillion")
     @Expose
-    public Double deathsPerOneMillion;
+    private Double deathsPerOneMillion;
     @SerializedName("tests")
     @Expose
-    public Integer tests;
+    private Integer tests;
     @SerializedName("testsPerOneMillion")
     @Expose
-    public Integer testsPerOneMillion;
+    private Double testsPerOneMillion;
     @SerializedName("affectedCountries")
     @Expose
-    public Integer affectedCountries;
+    private Integer affectedCountries;
 }

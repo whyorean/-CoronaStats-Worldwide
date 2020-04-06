@@ -74,7 +74,6 @@ public class NinjaGlobalModel extends AndroidViewModel {
         } catch (Exception e) {
             data.setValue(false);
             error.setValue(e.getMessage());
-            e.printStackTrace();
         }
     }
 }

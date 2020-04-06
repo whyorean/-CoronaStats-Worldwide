@@ -101,7 +101,7 @@ public class CountryItem extends AbstractItem<CountryItem.ViewHolder> {
                     .with(context)
                     .load(country.getCountryInfo().getFlag())
                     .transition(new DrawableTransitionOptions().crossFade())
-                    .transforms(new CenterCrop(), new RoundedCorners(30))
+                    .transforms(new CenterCrop(), new RoundedCorners(20))
                     .into(img);
         }
 
