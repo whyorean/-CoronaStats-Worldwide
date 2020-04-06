@@ -16,21 +16,31 @@
  * along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.aurora.corona.world.model.casetime;
+package com.aurora.corona.world.model.ninja;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.Data;
 
 @Data
-public class Tested {
-    private String source;
-
-    private String testsconductedbyprivatelabs;
-
-    private String totalindividualstested;
-
-    private String totalpositivecases;
-
-    private String totalsamplestested;
-
-    private String updatetimestamp;
+public class CountryInfo {
+    @SerializedName("_id")
+    @Expose
+    public Integer id;
+    @SerializedName("iso2")
+    @Expose
+    public String iso2;
+    @SerializedName("iso3")
+    @Expose
+    public String iso3;
+    @SerializedName("lat")
+    @Expose
+    public Double latitude;
+    @SerializedName("long")
+    @Expose
+    public Double longitude;
+    @SerializedName("flag")
+    @Expose
+    public String flag;
 }

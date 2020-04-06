@@ -16,22 +16,12 @@
   ~ along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-
-    <dimen name="padding_small">8dp</dimen>
-    <dimen name="padding_normal">10dp</dimen>
-    <dimen name="padding_large">16dp</dimen>
-
-    <dimen name="margin_xsmall">4dp</dimen>
-    <dimen name="margin_small">8dp</dimen>
-    <dimen name="margin_medium">12dp</dimen>
-    <dimen name="margin_large">16dp</dimen>
-
-    <dimen name="icon_size_default">24dp</dimen>
-    <dimen name="icon_size_category">36dp</dimen>
-    <dimen name="icon_size">56dp</dimen>
-
-    <dimen name="height_button">52dp</dimen>
-    <dimen name="searchbar_height">52dp</dimen>
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M22,11v9h-2v-3H4v3H2V4h2v10h8V7h6a4,4 0,0 1,4 4zM8,13a3,3 0,1 1,0 -6,3 3,0 0,1 0,6z"/>
+</vector>

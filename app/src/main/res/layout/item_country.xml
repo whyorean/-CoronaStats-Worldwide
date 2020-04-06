@@ -30,11 +30,18 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_normal">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_centerVertical="true" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_xsmall"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_toEndOf="@id/img"
             android:ellipsize="end"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.Aurora.SubTitle"

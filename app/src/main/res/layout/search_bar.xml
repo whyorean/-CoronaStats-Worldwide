@@ -22,7 +22,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
+    android:layout_height="@dimen/searchbar_height"
     android:layout_marginStart="@dimen/margin_large"
     android:layout_marginTop="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_large"

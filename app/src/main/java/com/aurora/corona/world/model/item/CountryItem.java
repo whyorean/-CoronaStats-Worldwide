@@ -20,13 +20,18 @@ package com.aurora.corona.world.model.item;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.aurora.corona.world.GlideApp;
 import com.aurora.corona.world.R;
-import com.aurora.corona.world.model.covid19api.summary.CountrySummary;
+import com.aurora.corona.world.model.ninja.Country;
 import com.aurora.corona.world.util.Util;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
@@ -44,11 +49,11 @@ import lombok.Setter;
 @Setter
 public class CountryItem extends AbstractItem<CountryItem.ViewHolder> {
 
-    private CountrySummary countrySummary;
+    private Country country;
     private String packageName;
 
-    public CountryItem(CountrySummary countrySummary) {
-        this.countrySummary = countrySummary;
+    public CountryItem(Country country) {
+        this.country = country;
     }
 
     @NotNull
@@ -59,7 +64,7 @@ public class CountryItem extends AbstractItem<CountryItem.ViewHolder> {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.item_state;
+        return R.layout.item_country;
     }
 
     @Override
@@ -68,6 +73,8 @@ public class CountryItem extends AbstractItem<CountryItem.ViewHolder> {
     }
 
     public static class ViewHolder extends FastItemAdapter.ViewHolder<CountryItem> {
+        @BindView(R.id.img)
+        ImageView img;
         @BindView(R.id.line1)
         AppCompatTextView line1;
         @BindView(R.id.line2)
@@ -85,19 +92,17 @@ public class CountryItem extends AbstractItem<CountryItem.ViewHolder> {
 
         @Override
         public void bindView(@NotNull CountryItem item, @NotNull List<?> list) {
+            final Country country = item.getCountry();
+            line1.setText(country.getCountry());
+            line2.setText(StringUtils.joinWith(" \u2022 ", "Today : Reported " + country.getTodayCases(), "Deaths " + country.getTodayDeaths()));
+            line3.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(country.getUpdated())));
 
-            final CountrySummary countrySummary = item.getCountrySummary();
-
-            int active = countrySummary.getNewConfirmed() - (countrySummary.getNewRecovered() + countrySummary.getNewDeaths());
-            if (active < 0)
-                active = countrySummary.getNewConfirmed();
-
-            line1.setText(countrySummary.getCountry());
-            line2.setText(StringUtils.joinWith(" \u2022 ", "Today : Reported " + countrySummary.getNewConfirmed(),
-                    "Active " + active,
-                    "Recovered " + countrySummary.getNewRecovered(),
-                    "Deaths " + countrySummary.getNewDeaths()));
-            line3.setText(StringUtils.joinWith(" : ", "Last updated", Util.getTimeFromISOInstant(countrySummary.getDate())));
+            GlideApp
+                    .with(context)
+                    .load(country.getCountryInfo().getFlag())
+                    .transition(new DrawableTransitionOptions().crossFade())
+                    .transforms(new CenterCrop(), new RoundedCorners(30))
+                    .into(img);
         }
 
         @Override

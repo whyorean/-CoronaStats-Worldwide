@@ -26,32 +26,26 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.aurora.corona.world.Constants;
-import com.aurora.corona.world.model.covid19api.country.Country;
+import com.aurora.corona.world.model.ninja.Global;
 import com.aurora.corona.world.task.NetworkTask;
 import com.aurora.corona.world.util.Log;
 import com.aurora.corona.world.util.PrefUtil;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class Covid19CountriesModel extends AndroidViewModel {
+public class NinjaGlobalModel extends AndroidViewModel {
 
     private Gson gson = new Gson();
     private MutableLiveData<Boolean> data = new MutableLiveData<>();
     private MutableLiveData<String> error = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    public Covid19CountriesModel(@NonNull Application application) {
+    public NinjaGlobalModel(@NonNull Application application) {
         super(application);
-        fetchAllCountries();
     }
 
     public MutableLiveData<String> getError() {
@@ -62,22 +56,20 @@ public class Covid19CountriesModel extends AndroidViewModel {
         return data;
     }
 
-    public void fetchAllCountries() {
+    public void fetchOnlineData() {
         disposable.add(Observable.fromCallable(() -> new NetworkTask()
-                .get("https://api.covid19api.com/countries"))
+                .get("https://corona.lmao.ninja/all"))
                 .subscribeOn(Schedulers.io())
+                .map(rawJSON -> gson.fromJson(rawJSON, Global.class))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::saveDataToPreferences, throwable -> Log.e(throwable.getMessage())));
     }
 
-    private void saveDataToPreferences(String rawResponse) {
+    private void saveDataToPreferences(Global global) {
         try {
-            final Type type = new TypeToken<List<Country>>() {
-            }.getType();
-            final List<Country> countryList = gson.fromJson(rawResponse, type);
-            Collections.sort(countryList, (o1, o2) -> o1.getCountry().compareToIgnoreCase(o2.getCountry()));
-            PrefUtil.putString(getApplication(), Constants.PREFERENCE_COVID19_COUNTRIES, gson.toJson(countryList));
-            PrefUtil.putBoolean(getApplication(), Constants.PREFERENCE_COVID19_COUNTRIES_AVAILABLE, true);
+            PrefUtil.putString(getApplication(), Constants.PREFERENCE_NINJA_GLOBAL, gson.toJson(global));
+            PrefUtil.putBoolean(getApplication(), Constants.PREFERENCE_NINJA_GLOBAL_AVAILABLE, true);
+            PrefUtil.putLong(getApplication(), Constants.PREFERENCE_NINJA_GLOBAL_LAST_UPDATED, System.currentTimeMillis());
             data.setValue(true);
         } catch (Exception e) {
             data.setValue(false);

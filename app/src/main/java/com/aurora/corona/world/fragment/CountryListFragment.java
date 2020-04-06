@@ -33,20 +33,25 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.aurora.corona.world.Constants;
 import com.aurora.corona.world.R;
 import com.aurora.corona.world.RecyclerDataObserver;
-import com.aurora.corona.world.model.covid19api.summary.CountrySummary;
 import com.aurora.corona.world.model.item.CountryItem;
-import com.aurora.corona.world.sheet.CountryWiseSheet;
-import com.aurora.corona.world.viewmodel.CountryWiseReportModel;
+import com.aurora.corona.world.model.ninja.Country;
+import com.aurora.corona.world.sheet.CountryDetailSheet;
+import com.aurora.corona.world.util.Util;
+import com.aurora.corona.world.util.diff.CountryDiffCallback;
+import com.aurora.corona.world.viewmodel.NinjaCountriesModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
 
 import java.util.List;
@@ -56,6 +61,8 @@ import butterknife.ButterKnife;
 
 public class CountryListFragment extends Fragment implements ItemFilterListener<CountryItem> {
 
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeLayout;
     @BindView(R.id.txt_title)
     AppCompatTextView txtTitle;
     @BindView(R.id.recycler)
@@ -68,7 +75,6 @@ public class CountryListFragment extends Fragment implements ItemFilterListener<
     ImageView action2;
 
     private Gson gson = new Gson();
-    private CountryWiseReportModel model;
     private RecyclerDataObserver dataObserver;
     private FastAdapter<CountryItem> fastAdapter;
     private ItemAdapter<CountryItem> itemAdapter;
@@ -86,11 +92,33 @@ public class CountryListFragment extends Fragment implements ItemFilterListener<
         setupRecycler();
         setupSearchBar();
 
-        model = new ViewModelProvider(this).get(CountryWiseReportModel.class);
+        final NinjaCountriesModel model = new ViewModelProvider(this).get(NinjaCountriesModel.class);
         model.getData().observe(getViewLifecycleOwner(), countryItems -> {
-            itemAdapter.add(countryItems);
+            dispatchAppsToAdapter(countryItems);
             isDataLoaded = true;
+            swipeLayout.setRefreshing(false);
         });
+
+        if (Util.isNinjaCountriesAvailable(requireContext())) {
+            model.fetchDataFromPreferences();
+        } else {
+            model.fetchDataOnline();
+        }
+
+        swipeLayout.setOnRefreshListener(model::fetchDataOnline);
+    }
+
+    @Override
+    public void onPause() {
+        swipeLayout.setRefreshing(false);
+        super.onPause();
+    }
+
+    private void dispatchAppsToAdapter(List<CountryItem> updatesItems) {
+        final FastAdapterDiffUtil fastAdapterDiffUtil = FastAdapterDiffUtil.INSTANCE;
+        final CountryDiffCallback diffCallback = new CountryDiffCallback();
+        final DiffUtil.DiffResult diffResult = fastAdapterDiffUtil.calculateDiff(itemAdapter, updatesItems, diffCallback);
+        fastAdapterDiffUtil.set(itemAdapter, diffResult);
     }
 
     private void setupSearchBar() {
@@ -125,20 +153,20 @@ public class CountryListFragment extends Fragment implements ItemFilterListener<
 
         fastAdapter.setOnClickListener((view, itemIAdapter, item, position) -> {
             final FragmentManager fragmentManager = getChildFragmentManager();
-            if (fragmentManager.findFragmentByTag(CountryWiseSheet.TAG) == null) {
-                CountryWiseSheet sheet = new CountryWiseSheet();
+            if (fragmentManager.findFragmentByTag(CountryDetailSheet.TAG) == null) {
+                CountryDetailSheet sheet = new CountryDetailSheet();
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.STRING_EXTRA, gson.toJson(item.getCountrySummary()));
+                bundle.putString(Constants.STRING_EXTRA, gson.toJson(item.getCountry()));
                 sheet.setArguments(bundle);
-                sheet.show(getChildFragmentManager(), CountryWiseSheet.TAG);
+                sheet.show(getChildFragmentManager(), CountryDetailSheet.TAG);
             }
             return false;
         });
 
         itemAdapter.getItemFilter().setFilterPredicate((genericItem, charSequence) -> {
-            final CountrySummary countrySummary = genericItem.getCountrySummary();
+            final Country country = genericItem.getCountry();
             final String query = charSequence.toString().toLowerCase();
-            return countrySummary.getCountry().toLowerCase().contains(query);
+            return country.getCountry().toLowerCase().contains(query);
         });
 
         itemAdapter.getItemFilter().setItemFilterListener(this);

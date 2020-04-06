@@ -30,7 +30,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.aurora.corona.world.Constants;
 import com.aurora.corona.world.R;
-import com.aurora.corona.world.model.covid19api.summary.CountrySummary;
+import com.aurora.corona.world.model.ninja.Country;
 import com.aurora.corona.world.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CountryWiseSheet extends BaseBottomSheet {
+public class CountryDetailSheet extends BaseBottomSheet {
 
     public static final String TAG = "STATE_WISE_SHEET";
 
@@ -54,10 +54,20 @@ public class CountryWiseSheet extends BaseBottomSheet {
     AppCompatTextView txtTitleState;
     @BindView(R.id.txt_last_updated)
     AppCompatTextView txtLastUpdated;
+    @BindView(R.id.txt_all_critical)
+    TextView txtAllCritical;
+    @BindView(R.id.txt_all_tests)
+    TextView txtAllTests;
+    @BindView(R.id.txt_million_cases)
+    TextView txtMillionCases;
+    @BindView(R.id.txt_million_deaths)
+    TextView txtMillionDeaths;
+    @BindView(R.id.txt_million_tests)
+    TextView txtMillionTests;
 
-    private CountrySummary countrySummary;
+    private Country country;
 
-    public CountryWiseSheet() {
+    public CountryDetailSheet() {
     }
 
     @Nullable
@@ -75,7 +85,7 @@ public class CountryWiseSheet extends BaseBottomSheet {
         if (getArguments() != null) {
             final Bundle bundle = getArguments();
             stringExtra = bundle.getString(Constants.STRING_EXTRA);
-            countrySummary = gson.fromJson(stringExtra, CountrySummary.class);
+            country = gson.fromJson(stringExtra, Country.class);
             populateData();
         } else {
             dismissAllowingStateLoss();
@@ -83,14 +93,16 @@ public class CountryWiseSheet extends BaseBottomSheet {
     }
 
     private void populateData() {
-        int active = countrySummary.getTotalConfirmed() - (countrySummary.getTotalRecovered() + countrySummary.getTotalDeaths());
-        if (active < 0)
-            active = countrySummary.getTotalConfirmed();
-        txtTitleState.setText(String.valueOf(countrySummary.getCountry()));
-        txtLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.getTimeFromISOInstant(countrySummary.getDate())));
-        txtAllTotal.setText(String.valueOf(countrySummary.getTotalConfirmed()));
-        txtAllActive.setText(String.valueOf(active));
-        txtAllCured.setText(String.valueOf(countrySummary.getTotalRecovered()));
-        txtAllDeaths.setText(String.valueOf(countrySummary.getTotalDeaths()));
+        txtTitleState.setText(String.valueOf(country.getCountry()));
+        txtLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(country.getUpdated())));
+        txtAllTotal.setText(String.valueOf(country.getCases()));
+        txtAllActive.setText(String.valueOf(country.getActive()));
+        txtAllCured.setText(String.valueOf(country.getRecovered()));
+        txtAllDeaths.setText(String.valueOf(country.getDeaths()));
+        txtAllCritical.setText(String.valueOf(country.getCritical()));
+        txtAllTests.setText(String.valueOf(country.getTests()));
+        txtMillionCases.setText(String.valueOf(country.getCasesPerOneMillion()));
+        txtMillionDeaths.setText(String.valueOf(country.getDeathsPerOneMillion()));
+        txtMillionTests.setText(String.valueOf(country.getTestsPerOneMillion()));
     }
 }

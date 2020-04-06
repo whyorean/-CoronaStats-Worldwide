@@ -52,8 +52,12 @@ public class Util {
                 .append(minutes >= 1 ? "minutes ago" : "minute ago");
     }
 
-    public static boolean isSummaryAvailable(Context context) {
-        return PrefUtil.getBoolean(context, Constants.PREFERENCE_COVID19_SUMMARY_AVAILABLE);
+    public static boolean isNinjaCountriesAvailable(Context context) {
+        return PrefUtil.getBoolean(context, Constants.PREFERENCE_NINJA_COUNTRIES_AVAILABLE);
+    }
+
+    public static boolean isNinjaGlobalAvailable(Context context) {
+        return PrefUtil.getBoolean(context, Constants.PREFERENCE_NINJA_GLOBAL_AVAILABLE);
     }
 
     public static String getTimeFromISOInstant(String isoDate) {

@@ -37,8 +37,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import io.reactivex.Observable;
-
 public class CountryWiseReportModel extends AndroidViewModel implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Gson gson = new Gson();
@@ -66,7 +64,7 @@ public class CountryWiseReportModel extends AndroidViewModel implements SharedPr
         final Type type = new TypeToken<List<CountrySummary>>() {
         }.getType();
 
-        if (!rawStateWiseDate.isEmpty()) {
+       /* if (!rawStateWiseDate.isEmpty()) {
             final List<CountrySummary> countrySummaryList = gson.fromJson(rawStateWiseDate, type);
             if (!countrySummaryList.isEmpty()) {
                 Observable.fromIterable(countrySummaryList)
@@ -76,7 +74,7 @@ public class CountryWiseReportModel extends AndroidViewModel implements SharedPr
                         .doOnError(throwable -> error.setValue(throwable.getMessage()))
                         .subscribe();
             }
-        }
+        }*/
     }
 
     @Override

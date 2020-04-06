@@ -36,10 +36,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.aurora.corona.world.Constants;
 import com.aurora.corona.world.R;
-import com.aurora.corona.world.model.covid19api.summary.Global;
+import com.aurora.corona.world.model.ninja.Global;
 import com.aurora.corona.world.util.PrefUtil;
 import com.aurora.corona.world.util.Util;
-import com.aurora.corona.world.viewmodel.Covid19SummaryModel;
+import com.aurora.corona.world.viewmodel.NinjaGlobalModel;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
@@ -48,13 +48,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeLayout;
-    @BindView(R.id.txt_recovered)
-    TextView txtRecovered;
-    @BindView(R.id.txt_new_cases)
+    @BindView(R.id.txt_today_total)
     TextView txtNewCases;
-    @BindView(R.id.txt_deaths)
+    @BindView(R.id.txt_today_deaths)
     TextView txtDeaths;
     @BindView(R.id.txt_all_total)
     TextView txtAllTotal;
@@ -68,8 +67,10 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
     ConstraintLayout layoutBottom;
     @BindView(R.id.txt_today_last_updated)
     AppCompatTextView txtTodayLastUpdated;
-    @BindView(R.id.txt_all_last_updated)
-    AppCompatTextView txtAllLastUpdated;
+    @BindView(R.id.txt_critical_cases)
+    TextView txtCriticalCases;
+    @BindView(R.id.txt_affect_countries)
+    TextView txtAffectCountries;
 
     private Gson gson = new Gson();
     private SharedPreferences sharedPreferences;
@@ -90,28 +91,31 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (Util.isSummaryAvailable(requireContext())) {
-            updateDashboardData();
-        }
 
-        final Covid19SummaryModel summaryModel = new ViewModelProvider(this).get(Covid19SummaryModel.class);
-        summaryModel.getData().observe(getViewLifecycleOwner(), result -> {
+        final NinjaGlobalModel ninjaGlobalModel = new ViewModelProvider(this).get(NinjaGlobalModel.class);
+        ninjaGlobalModel.getData().observe(getViewLifecycleOwner(), result -> {
             Toast.makeText(requireContext(), "Database Updated", Toast.LENGTH_SHORT).show();
             swipeLayout.setRefreshing(false);
         });
 
-        summaryModel.getError().observe(getViewLifecycleOwner(), s -> {
+        ninjaGlobalModel.getError().observe(getViewLifecycleOwner(), s -> {
             Toast.makeText(requireContext(), "Failed to retrieve new data", Toast.LENGTH_SHORT).show();
             swipeLayout.setRefreshing(false);
         });
 
-        swipeLayout.setOnRefreshListener(summaryModel::fetchOnlineData);
+        if (Util.isNinjaGlobalAvailable(requireContext())) {
+            updateDashboardData();
+        } else {
+            ninjaGlobalModel.fetchOnlineData();
+        }
+
+        swipeLayout.setOnRefreshListener(ninjaGlobalModel::fetchOnlineData);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case Constants.PREFERENCE_COVID19_SUMMARY_LAST_UPDATED:
+            case Constants.PREFERENCE_NINJA_GLOBAL_LAST_UPDATED:
                 updateDashboardData();
                 break;
         }
@@ -135,28 +139,18 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
 
     private void updateDashboardData() {
 
-        final long lastUpdated = PrefUtil.getLong(requireContext(), Constants.PREFERENCE_COVID19_SUMMARY_LAST_UPDATED);
-        final String rawGobal = PrefUtil.getString(requireContext(), Constants.PREFERENCE_COVID19_SUMMARY_GLOBAL);
-        final Global global = gson.fromJson(rawGobal, Global.class);
+        final String rawNinjaGlobal = PrefUtil.getString(requireContext(), Constants.PREFERENCE_NINJA_GLOBAL);
+        final Global global = gson.fromJson(rawNinjaGlobal, Global.class);
 
-        String globalLastUpdated = PrefUtil.getString(requireContext(), Constants.PREFERENCE_COVID19_SUMMARY_GLOBAL_LAST_UPDATED);
-        globalLastUpdated = globalLastUpdated.replaceAll("\"", "");
+        txtTodayLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(global.getUpdated())));
+        txtNewCases.setText(String.valueOf(global.getTodayCases()));
+        txtDeaths.setText(String.valueOf(global.getTodayDeaths()));
 
-        txtTodayLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(lastUpdated)));
-        txtRecovered.setText(String.valueOf(global.getNewRecovered()));
-        txtNewCases.setText(String.valueOf(global.getNewConfirmed()));
-        txtDeaths.setText(String.valueOf(global.getNewDeaths()));
-
-        txtAllTotal.setText(String.valueOf(global.getTotalConfirmed()));
-        txtAllActive.setText(String.valueOf(global.getTotalConfirmed() - global.getTotalRecovered()));
-        txtAllCured.setText(String.valueOf(global.getTotalRecovered()));
-        txtAllDeaths.setText(String.valueOf(global.getTotalDeaths()));
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            globalLastUpdated = Util.getTimeFromISOInstant(globalLastUpdated);
-            txtAllLastUpdated.setText(StringUtils.capitalize(globalLastUpdated));
-        } else {
-            txtAllLastUpdated.setText(globalLastUpdated);
-        }
+        txtAllTotal.setText(String.valueOf(global.getCases()));
+        txtAllActive.setText(String.valueOf(global.getActive()));
+        txtAllCured.setText(String.valueOf(global.getRecovered()));
+        txtAllDeaths.setText(String.valueOf(global.getDeaths()));
+        txtCriticalCases.setText(String.valueOf(global.getCritical()));
+        txtAffectCountries.setText(String.valueOf(global.getAffectedCountries()));
     }
 }

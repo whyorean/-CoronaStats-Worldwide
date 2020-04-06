@@ -34,12 +34,21 @@
     <string name="subtitle_deaths">Deaths</string>
     <string name="subtitle_active">Active</string>
     <string name="subtitle_new_cases">New Cases</string>
+    <string name="subtitle_tests">Tests</string>
     <string name="subtitle_select_country">Select Country</string>
 
     <string name="title_total_cases">Total Cases</string>
     <string name="title_active_cases">Active Cases</string>
     <string name="title_recovered_cases">Cured Cases</string>
     <string name="title_death_cases">Death Cases</string>
+    <string name="title_critical_cases">Critical Cases</string>
+    <string name="title_test_cases">Total Tests</string>
+    <string name="title_affected_countries">Countries</string>
 
-    <string name="title_source">Credits : Covid19Api.com</string>
+    <string name="title_million_cases">Cases per million</string>
+    <string name="title_million_deaths">Deaths per million</string>
+    <string name="title_million_tests">Tests per million</string>
+
+    <string name="title_source_covid19">Credits : Covid19Api.com</string>
+    <string name="title_source_ninja">Credits : Corona.lmao.ninja</string>
 </resources>
