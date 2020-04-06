@@ -1,0 +1,56 @@
+<!--
+  ~ Corona Stats
+  ~ Copyright (C) 2020, Rahul Kumar Patel <auroraoss.dev@gmail.com>
+  ~
+  ~ Aurora Store is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 2 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~ Corona Stats is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <style name="TextAppearance.Aurora.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/gilroy_extra_bold</item>
+        <item name="android:textColor">@color/txtColorPrimary</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="TextAppearance.Aurora.SubTitle" parent="TextAppearance.Aurora.Title">
+        <item name="android:letterSpacing">0.025</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.Aurora.Line1" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/txtColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.Aurora.Line2" parent="TextAppearance.Aurora.Line1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/txtColorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Aurora.Line3" parent="TextAppearance.Aurora.Line2">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextAppearance.Aurora.SearchBar" parent="TextAppearance.Aurora.Line1">
+        <item name="android:textSize">20sp</item>
+    </style>
+</resources>

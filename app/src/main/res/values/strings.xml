@@ -1,0 +1,45 @@
+<!--
+  ~ Corona Stats
+  ~ Copyright (C) 2020, Rahul Kumar Patel <auroraoss.dev@gmail.com>
+  ~
+  ~ Aurora Store is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 2 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~ Corona Stats is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name">Corona Stats - Worldwide</string>
+
+    <string name="action_close">Close</string>
+    <string name="action_save">Save</string>
+
+    <string name="title_home">Dashboard</string>
+    <string name="title_country_list">Country List</string>
+    <string name="title_statistics">Statistics</string>
+    <string name="title_search">Search</string>
+
+    <string name="subtitle_today">Today</string>
+    <string name="subtitle_overall">Overall</string>
+    <string name="subtitle_reported">Reported</string>
+    <string name="subtitle_recovered">Recovered</string>
+    <string name="subtitle_deaths">Deaths</string>
+    <string name="subtitle_active">Active</string>
+    <string name="subtitle_new_cases">New Cases</string>
+    <string name="subtitle_select_country">Select Country</string>
+
+    <string name="title_total_cases">Total Cases</string>
+    <string name="title_active_cases">Active Cases</string>
+    <string name="title_recovered_cases">Cured Cases</string>
+    <string name="title_death_cases">Death Cases</string>
+
+    <string name="title_source">Credits : Covid19Api.com</string>
+</resources>
