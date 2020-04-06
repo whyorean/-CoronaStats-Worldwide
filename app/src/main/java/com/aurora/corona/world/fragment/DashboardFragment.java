@@ -141,16 +141,15 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
 
         final String rawNinjaGlobal = PrefUtil.getString(requireContext(), Constants.PREFERENCE_NINJA_GLOBAL);
         final Global global = gson.fromJson(rawNinjaGlobal, Global.class);
-
+        
         txtTodayLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(global.getUpdated())));
-        txtNewCases.setText(String.valueOf(global.getTodayCases()));
-        txtDeaths.setText(String.valueOf(global.getTodayDeaths()));
-
-        txtAllTotal.setText(String.valueOf(global.getCases()));
-        txtAllActive.setText(String.valueOf(global.getActive()));
-        txtAllCured.setText(String.valueOf(global.getRecovered()));
-        txtAllDeaths.setText(String.valueOf(global.getDeaths()));
-        txtCriticalCases.setText(String.valueOf(global.getCritical()));
-        txtAffectCountries.setText(String.valueOf(global.getAffectedCountries()));
+        txtNewCases.setText(Util.getFormattedString(global.getTodayCases()));
+        txtDeaths.setText(Util.getFormattedString(global.getTodayDeaths()));
+        txtAllTotal.setText(Util.getFormattedString(global.getCases()));
+        txtAllActive.setText(Util.getFormattedString(global.getActive()));
+        txtAllCured.setText(Util.getFormattedString(global.getRecovered()));
+        txtAllDeaths.setText(Util.getFormattedString(global.getDeaths()));
+        txtCriticalCases.setText(Util.getFormattedString(global.getCritical()));
+        txtAffectCountries.setText(Util.getFormattedString(global.getAffectedCountries()));
     }
 }

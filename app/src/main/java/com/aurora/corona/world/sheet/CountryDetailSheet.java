@@ -95,12 +95,12 @@ public class CountryDetailSheet extends BaseBottomSheet {
     private void populateData() {
         txtTitleState.setText(String.valueOf(country.getCountry()));
         txtLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(country.getUpdated())));
-        txtAllTotal.setText(String.valueOf(country.getCases()));
-        txtAllActive.setText(String.valueOf(country.getActive()));
-        txtAllCured.setText(String.valueOf(country.getRecovered()));
-        txtAllDeaths.setText(String.valueOf(country.getDeaths()));
-        txtAllCritical.setText(String.valueOf(country.getCritical()));
-        txtAllTests.setText(String.valueOf(country.getTests()));
+        txtAllTotal.setText(Util.getFormattedString(country.getCases()));
+        txtAllActive.setText(Util.getFormattedString(country.getActive()));
+        txtAllCured.setText(Util.getFormattedString(country.getRecovered()));
+        txtAllDeaths.setText(Util.getFormattedString(country.getDeaths()));
+        txtAllCritical.setText(Util.getFormattedString(country.getCritical()));
+        txtAllTests.setText(Util.getFormattedString(country.getTests()));
         txtMillionCases.setText(String.valueOf(country.getCasesPerOneMillion()));
         txtMillionDeaths.setText(String.valueOf(country.getDeathsPerOneMillion()));
         txtMillionTests.setText(String.valueOf(country.getTestsPerOneMillion()));

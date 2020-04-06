@@ -94,8 +94,12 @@ public class CountryItem extends AbstractItem<CountryItem.ViewHolder> {
         public void bindView(@NotNull CountryItem item, @NotNull List<?> list) {
             final Country country = item.getCountry();
             line1.setText(country.getCountry());
-            line2.setText(StringUtils.joinWith(" \u2022 ", "Today : Reported " + country.getTodayCases(), "Deaths " + country.getTodayDeaths()));
-            line3.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(country.getUpdated())));
+            line2.setText(StringUtils.joinWith(" \u2022 ",
+                    "Today : Reported " + Util.getFormattedString(country.getTodayCases()),
+                    "Deaths " + Util.getFormattedString(country.getTodayDeaths())));
+            line3.setText(StringUtils.joinWith(" : ",
+                    "Last updated",
+                    Util.millisToTime(country.getUpdated())));
 
             GlideApp
                     .with(context)

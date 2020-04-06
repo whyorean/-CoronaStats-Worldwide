@@ -25,6 +25,7 @@ import com.aurora.corona.world.Constants;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,5 +88,10 @@ public class Util {
             e.printStackTrace();
             return isoDate;
         }
+    }
+
+    public static String getFormattedString(Integer integer){
+        final DecimalFormat decimalFormat = new DecimalFormat("###,###.###");
+        return String.valueOf(decimalFormat.format(integer));
     }
 }
