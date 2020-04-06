@@ -21,6 +21,7 @@
 
     <string name="action_close">Close</string>
     <string name="action_save">Save</string>
+    <string name="action_change">Change country</string>
 
     <string name="title_home">Dashboard</string>
     <string name="title_country_list">Country List</string>

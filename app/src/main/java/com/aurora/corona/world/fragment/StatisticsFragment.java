@@ -62,6 +62,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -100,15 +102,21 @@ public class StatisticsFragment extends Fragment {
         });
 
         if (country == null) {
+            showCountrySelector();
             Toast.makeText(requireContext(), "Select a country first", Toast.LENGTH_SHORT).show();
         } else {
-            txtCountrySelector.setText(country.getCountry());
+            txtCountrySelector.setText(StringUtils.joinWith(":",
+                    getString(R.string.action_change), country.getCountry()));
             model.fetchOnlineData(country.getSlug());
         }
     }
 
     @OnClick(R.id.txt_country_selector)
     public void showAllCountryList() {
+        showCountrySelector();
+    }
+
+    private void showCountrySelector() {
         final FragmentManager fragmentManager = getChildFragmentManager();
         if (fragmentManager.findFragmentByTag(CountrySelectorSheet.TAG) == null) {
             final CountrySelectorSheet sheet = new CountrySelectorSheet();
@@ -119,7 +127,8 @@ public class StatisticsFragment extends Fragment {
     private void updateCountry() {
         final String countryString = PrefUtil.getString(requireContext(), Constants.PREFERENCE_COVID19_COUNTRY_SELECTED);
         final Country country = gson.fromJson(countryString, Country.class);
-        txtCountrySelector.setText(country.getCountry());
+        txtCountrySelector.setText(StringUtils.joinWith(" : ",
+                getString(R.string.action_change), country.getCountry()));
     }
 
     private void setupBarChart(CountryStatsMerged countryStatsMerged) {
