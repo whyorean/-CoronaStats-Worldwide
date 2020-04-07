@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_source_ninja">Source : NovelCOVID Api</string>
+    <string name="title_source_covid19">Source : Covid19Api.com</string>
+    <string name="title_million_tests">Tests par million</string>
+    <string name="title_million_deaths">Décès par million</string>
+    <string name="title_million_cases">Cas par million</string>
+    <string name="title_affected_countries">Pays</string>
+    <string name="title_test_cases">Total des tests</string>
+    <string name="title_critical_cases">Cas critiques</string>
+    <string name="title_death_cases">Cas de décès</string>
+    <string name="title_recovered_cases">Cas guéris</string>
+    <string name="title_active_cases">Cas actifs</string>
+    <string name="title_total_cases">Total des cas</string>
+    <string name="subtitle_select_country">Sélectionner un pays</string>
+    <string name="subtitle_tests">Tests</string>
+    <string name="subtitle_new_cases">Nouveaux cas</string>
+    <string name="subtitle_active">Actifs</string>
+    <string name="subtitle_deaths">Décès</string>
+    <string name="subtitle_recovered">Guéris</string>
+    <string name="subtitle_reported">Signalés</string>
+    <string name="subtitle_today">Aujourd’hui</string>
+    <string name="title_search">Rechercher</string>
+    <string name="title_statistics">Statistiques</string>
+    <string name="title_country_list">Liste des pays</string>
+    <string name="title_home">Tableau de bord</string>
+    <string name="action_change">Choisissez un pays</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_close">Fermer</string>
+    <string name="app_name">Corona Stats - Worldwide</string>
+    <string name="subtitle_overall">Vue d\'ensemble</string>
+</resources>
