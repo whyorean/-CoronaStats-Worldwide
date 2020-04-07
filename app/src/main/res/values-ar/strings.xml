@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_source_ninja">المصدر : NovelCOVID Api</string>
+    <string name="title_source_covid19">المصدر : Covid19Api.com</string>
+    <string name="title_million_tests">فحوصات في المليون</string>
+    <string name="title_million_deaths">وفيات في المليون</string>
+    <string name="title_million_cases">حالات في المليون</string>
+    <string name="title_affected_countries">البلدان</string>
+    <string name="title_test_cases">مجموع الفحوصات</string>
+    <string name="title_critical_cases">حالات حرجة</string>
+    <string name="title_death_cases">حالات وفاة</string>
+    <string name="title_recovered_cases">حالات تعافت</string>
+    <string name="title_active_cases">حالات نشطة</string>
+    <string name="title_total_cases">مجموع الحالات</string>
+    <string name="subtitle_select_country">اختر البلد</string>
+    <string name="subtitle_tests">فحوصات</string>
+    <string name="subtitle_new_cases">حالات جديدة</string>
+    <string name="subtitle_active">حالات نشطة</string>
+    <string name="subtitle_deaths">وفيات</string>
+    <string name="subtitle_recovered">متعافون</string>
+    <string name="subtitle_reported">حالات مؤكدة</string>
+    <string name="subtitle_overall">نظرة شاملة</string>
+    <string name="subtitle_today">اليوم</string>
+    <string name="title_search">بحث</string>
+    <string name="title_statistics">الإحصائيات</string>
+    <string name="title_country_list">قائمة البلدان</string>
+    <string name="title_home">لوح المراقبة</string>
+    <string name="action_change">تغيير البلد</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_close">أغلق</string>
+    <string name="app_name">Corona Stats - Worldwide</string>
+</resources>
