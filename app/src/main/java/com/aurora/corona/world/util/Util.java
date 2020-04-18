@@ -54,11 +54,11 @@ public class Util {
     }
 
     public static boolean isNinjaCountriesAvailable(Context context) {
-        return PrefUtil.getBoolean(context, Constants.PREFERENCE_NINJA_COUNTRIES_AVAILABLE);
+        return PrefUtil.getBoolean(context, Constants.PREFERENCE_NINJA2_COUNTRIES_AVAILABLE);
     }
 
     public static boolean isNinjaGlobalAvailable(Context context) {
-        return PrefUtil.getBoolean(context, Constants.PREFERENCE_NINJA_GLOBAL_AVAILABLE);
+        return PrefUtil.getBoolean(context, Constants.PREFERENCE_NINJA2_GLOBAL_AVAILABLE);
     }
 
     public static String getTimeFromISOInstant(String isoDate) {

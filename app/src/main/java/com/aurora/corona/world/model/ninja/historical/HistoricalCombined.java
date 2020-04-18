@@ -16,24 +16,15 @@
  * along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.aurora.corona.world.model.covid19api.summary;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+package com.aurora.corona.world.model.ninja.historical;
 
 import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class Covid19Summary {
-    @SerializedName("Global")
-    @Expose
-    private Global global;
-    @SerializedName("Countries")
-    @Expose
-    private List<CountrySummary> countries = null;
-    @SerializedName("Date")
-    @Expose
-    private String date;
+public class HistoricalCombined {
+    private List<Historical> cases;
+    private List<Historical> deaths;
+    private List<Historical> recovered;
 }

@@ -34,7 +34,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.aurora.corona.world.viewmodel.Covid19CountriesModel;
-import com.aurora.corona.world.viewmodel.Covid19SummaryModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -84,18 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        final Covid19SummaryModel summaryModel = new ViewModelProvider(this).get(Covid19SummaryModel.class);
-        summaryModel.getData().observe(this, result -> {
-            if (result)
-                showSnackBar("Database updated", null);
-        });
-
-        summaryModel.getError().observe(this, s -> {
-            showSnackBar("Failed to retrieve new data", v -> summaryModel.fetchOnlineData());
-        });
-
-        summaryModel.fetchOnlineData();
 
         final Covid19CountriesModel covid19CountriesModel = new ViewModelProvider(this).get(Covid19CountriesModel.class);
         covid19CountriesModel.getData().observe(this, result -> {

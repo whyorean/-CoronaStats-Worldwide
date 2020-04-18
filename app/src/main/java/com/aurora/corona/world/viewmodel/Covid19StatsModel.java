@@ -27,15 +27,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.aurora.corona.world.Constants;
 import com.aurora.corona.world.model.covid19api.country.Country;
-import com.aurora.corona.world.model.covid19api.stats.CountryStats;
-import com.aurora.corona.world.model.covid19api.stats.CountryStatsMerged;
+import com.aurora.corona.world.model.ninja.historical.Historical;
+import com.aurora.corona.world.model.ninja.historical.HistoricalCombined;
 import com.aurora.corona.world.task.NetworkTask;
+import com.aurora.corona.world.util.Log;
 import com.aurora.corona.world.util.PrefUtil;
 import com.aurora.corona.world.util.Util;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonObject;
 
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -47,7 +48,7 @@ public class Covid19StatsModel extends AndroidViewModel implements SharedPrefere
 
     private Gson gson = new Gson();
     private SharedPreferences sharedPreferences;
-    private MutableLiveData<CountryStatsMerged> data = new MutableLiveData<>();
+    private MutableLiveData<HistoricalCombined> data = new MutableLiveData<>();
 
     private MutableLiveData<String> error = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -62,50 +63,59 @@ public class Covid19StatsModel extends AndroidViewModel implements SharedPrefere
         return error;
     }
 
-    public MutableLiveData<CountryStatsMerged> getConfirmedData() {
+    public MutableLiveData<HistoricalCombined> getConfirmedData() {
         return data;
     }
 
-    public void fetchOnlineData(String countrySlug) {
-
-        final Observable<String> ob1 = Observable.fromCallable(() -> new NetworkTask()
-                .get("https://api.covid19api.com/country/" + countrySlug + "/status/confirmed/live"))
-                .subscribeOn(Schedulers.io());
-
-        final Observable<String> ob2 = Observable.fromCallable(() -> new NetworkTask()
-                .get("https://api.covid19api.com/country/" + countrySlug + "/status/recovered/live"))
-                .subscribeOn(Schedulers.io());
-
-        final Observable<String> ob3 = Observable.fromCallable(() -> new NetworkTask()
-                .get("https://api.covid19api.com/country/" + countrySlug + "/status/deaths/live"))
-                .subscribeOn(Schedulers.io());
-
-        disposable.add(Observable.merge(ob1, ob2, ob3)
-                .toList()
+    public void fetchOnlineData2(String countryISO) {
+        disposable.add(Observable.fromCallable(() -> new NetworkTask()
+                .get("https://corona.lmao.ninja/v2/historical/" + countryISO))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(rawResponseList -> {
-                    final CountryStatsMerged countryStatsMerged = new CountryStatsMerged();
-                    final Type type = new TypeToken<List<CountryStats>>() {
-                    }.getType();
+                .subscribe(rawResponse -> {
+                    final JsonObject jsonObject = gson.fromJson(rawResponse, JsonObject.class);
+                    final JsonObject timeLineObject = jsonObject.get("timeline").getAsJsonObject();
 
-                    for (String rawResponse : rawResponseList) {
-                        List<CountryStats> countryStatsList = gson.fromJson(rawResponse, type);
+                    final JsonObject casesObject = timeLineObject.get("cases").getAsJsonObject();
+                    final JsonObject deathsObject = timeLineObject.get("deaths").getAsJsonObject();
+                    final JsonObject recoveredObject = timeLineObject.get("recovered").getAsJsonObject();
 
-                        switch (countryStatsList.get(0).getStatus()) {
-                            case "confirmed":
-                                countryStatsMerged.setListConfirmed(countryStatsList);
-                                break;
-                            case "recovered":
-                                countryStatsMerged.setListRecovered(countryStatsList);
-                                break;
-                            case "deaths":
-                                countryStatsMerged.setListDeath(countryStatsList);
-                                break;
-                        }
+                    final HistoricalCombined historicalCombined = new HistoricalCombined();
+
+                    final List<Historical> casesList = new ArrayList<>();
+                    final List<Historical> deathsList = new ArrayList<>();
+                    final List<Historical> recoveredList = new ArrayList<>();
+
+                    float lastValue = 0;
+                    for (String key : casesObject.keySet()) {
+                        float currentValue = casesObject.get(key).getAsFloat();
+                        casesList.add(new Historical(key, currentValue - lastValue));
+                        lastValue = currentValue;
                     }
-                    countryStatsMerged.setSize(countryStatsMerged.getListConfirmed().size());
-                    data.setValue(countryStatsMerged);
+
+                    lastValue = 0;
+                    for (String key : deathsObject.keySet()) {
+                        float currentValue = deathsObject.get(key).getAsFloat();
+                        deathsList.add(new Historical(key, currentValue - lastValue));
+                        lastValue = currentValue;
+                    }
+
+                    lastValue = 0;
+                    for (String key : recoveredObject.keySet()) {
+                        float currentValue = recoveredObject.get(key).getAsFloat();
+                        recoveredList.add(new Historical(key, currentValue - lastValue));
+                        lastValue = currentValue;
+                    }
+
+                    historicalCombined.setCases(casesList);
+                    historicalCombined.setDeaths(deathsList);
+                    historicalCombined.setRecovered(recoveredList);
+
+                    data.setValue(historicalCombined);
+
+                }, throwable -> {
+                    Log.e(throwable.getMessage());
+                    throwable.printStackTrace();
                 }));
     }
 
@@ -114,7 +124,7 @@ public class Covid19StatsModel extends AndroidViewModel implements SharedPrefere
         if (key.equals(Constants.PREFERENCE_COVID19_COUNTRY_SELECTED)) {
             final String countryString = PrefUtil.getString(getApplication(), Constants.PREFERENCE_COVID19_COUNTRY_SELECTED);
             final Country country = gson.fromJson(countryString, Country.class);
-            fetchOnlineData(country.getSlug());
+            fetchOnlineData2(country.getISO2());
         }
     }
 

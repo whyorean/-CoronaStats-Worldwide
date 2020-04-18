@@ -66,7 +66,7 @@ public class NinjaCountriesModel extends AndroidViewModel {
 
     public void fetchDataOnline() {
         disposable.add(Observable.fromCallable(() -> new NetworkTask()
-                .get("https://corona.lmao.ninja/countries?sort=country"))
+                .get("https://corona.lmao.ninja/v2/countries?sort=country"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::parseData, throwable -> Log.e(throwable.getMessage())));
@@ -85,13 +85,13 @@ public class NinjaCountriesModel extends AndroidViewModel {
     }
 
     private void saveDataToPreference(List<Country> countryList) {
-        PrefUtil.putString(getApplication(), Constants.PREFERENCE_NINJA_COUNTRIES, gson.toJson(countryList));
-        PrefUtil.putBoolean(getApplication(), Constants.PREFERENCE_NINJA_COUNTRIES_AVAILABLE, true);
-        PrefUtil.putLong(getApplication(), Constants.PREFERENCE_NINJA_COUNTRIES_LAST_UPDATED, System.currentTimeMillis());
+        PrefUtil.putString(getApplication(), Constants.PREFERENCE_NINJA2_COUNTRIES, gson.toJson(countryList));
+        PrefUtil.putBoolean(getApplication(), Constants.PREFERENCE_NINJA2_COUNTRIES_AVAILABLE, true);
+        PrefUtil.putLong(getApplication(), Constants.PREFERENCE_NINJA2_COUNTRIES_LAST_UPDATED, System.currentTimeMillis());
     }
 
     public void fetchDataFromPreferences() {
-        final String rawNinjaCountries = PrefUtil.getString(getApplication(), Constants.PREFERENCE_NINJA_COUNTRIES);
+        final String rawNinjaCountries = PrefUtil.getString(getApplication(), Constants.PREFERENCE_NINJA2_COUNTRIES);
         if (!rawNinjaCountries.isEmpty()) {
             final List<Country> countryList = gson.fromJson(rawNinjaCountries, type);
             if (!countryList.isEmpty()) {

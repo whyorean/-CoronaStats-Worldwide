@@ -36,12 +36,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.aurora.corona.world.Constants;
 import com.aurora.corona.world.R;
 import com.aurora.corona.world.model.covid19api.country.Country;
-import com.aurora.corona.world.model.covid19api.stats.CountryStats;
-import com.aurora.corona.world.model.covid19api.stats.CountryStatsMerged;
-import com.aurora.corona.world.model.covid19api.summary.Global;
+import com.aurora.corona.world.model.ninja.historical.Historical;
+import com.aurora.corona.world.model.ninja.historical.HistoricalCombined;
 import com.aurora.corona.world.sheet.CountrySelectorSheet;
 import com.aurora.corona.world.util.PrefUtil;
-import com.aurora.corona.world.util.Util;
 import com.aurora.corona.world.viewmodel.Covid19StatsModel;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -53,11 +51,13 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.google.gson.Gson;
@@ -107,7 +107,7 @@ public class StatisticsFragment extends Fragment {
         } else {
             txtCountrySelector.setText(StringUtils.joinWith(":",
                     getString(R.string.action_change), country.getCountry()));
-            model.fetchOnlineData(country.getSlug());
+            model.fetchOnlineData2(country.getISO2());
         }
     }
 
@@ -131,7 +131,7 @@ public class StatisticsFragment extends Fragment {
                 getString(R.string.action_change), country.getCountry()));
     }
 
-    private void setupBarChart(CountryStatsMerged countryStatsMerged) {
+    private void setupBarChart(HistoricalCombined historicalCombined) {
         chart.invalidate();
         chart.setDrawBarShadow(false);
         chart.setDrawValueAboveBar(true);
@@ -148,12 +148,12 @@ public class StatisticsFragment extends Fragment {
         xAxis.setGranularity(1f);
         xAxis.setDrawLabels(true);
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setValueFormatter(new ValueFormatter() {
+       /* xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return Util.getDateFromISOInstant(countryStatsMerged.getListConfirmed().get((int) value).getDate());
+                return historicalCombined.getCases().get((int) value).getDate();
             }
-        });
+        });*/
 
         chart.getAxisRight().setEnabled(false);
 
@@ -179,24 +179,24 @@ public class StatisticsFragment extends Fragment {
         final ArrayList<BarEntry> valuesDeaths = new ArrayList<>();
 
         int i = 0;
-        for (CountryStats countryStats : countryStatsMerged.getListConfirmed()) {
-            valuesTotal.add(new BarEntry(i++, countryStats.getCases()));
+        for (Historical historical : historicalCombined.getCases()) {
+            valuesTotal.add(new BarEntry(i++, historical.getCount()));
         }
 
         i = 0;
-        for (CountryStats countryStats : countryStatsMerged.getListRecovered()) {
-            valuesRecovered.add(new BarEntry(i++, countryStats.getCases()));
+        for (Historical historical : historicalCombined.getRecovered()) {
+            valuesRecovered.add(new BarEntry(i++, historical.getCount()));
         }
 
         i = 0;
-        for (CountryStats countryStats : countryStatsMerged.getListDeath()) {
-            valuesDeaths.add(new BarEntry(i++, countryStats.getCases()));
+        for (Historical historical : historicalCombined.getDeaths()) {
+            valuesDeaths.add(new BarEntry(i++, historical.getCount()));
         }
 
         //Setup Pie chart
-        float totalConfirmed = valuesTotal.get(i - 1).getY();
-        float totalDeaths = valuesDeaths.get(i - 1).getY();
-        float totalRecovered = valuesRecovered.get(i - 1).getY();
+        float totalConfirmed = valuesTotal.get(valuesTotal.size() - 1).getY();
+        float totalDeaths = valuesDeaths.get(valuesTotal.size() - 1).getY();
+        float totalRecovered = valuesRecovered.get(valuesTotal.size() - 1).getY();
 
         setupPieChart(totalConfirmed, totalRecovered, totalDeaths);
 
@@ -215,6 +215,24 @@ public class StatisticsFragment extends Fragment {
 
         chart.setData(new BarData(set1, set2, set3));
         chart.animateY(1400, Easing.Linear);
+
+        chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                float totalConfirmed = valuesTotal.get((int) e.getX()).getY();
+                float totalDeaths = valuesDeaths.get((int) e.getX()).getY();
+                float totalRecovered = valuesRecovered.get((int) e.getX()).getY();
+                setupPieChart(totalConfirmed, totalRecovered, totalDeaths);
+            }
+
+            @Override
+            public void onNothingSelected() {
+                float totalConfirmed = valuesTotal.get(0).getY();
+                float totalDeaths = valuesDeaths.get(0).getY();
+                float totalRecovered = valuesRecovered.get(0).getY();
+                setupPieChart(totalConfirmed, totalRecovered, totalDeaths);
+            }
+        });
     }
 
     private void setupPieChart(float totalConfirmed, float totalRecovered, float totalDeaths) {
@@ -252,17 +270,11 @@ public class StatisticsFragment extends Fragment {
         legend.setYOffset(0f);
 
         final ArrayList<PieEntry> entries = new ArrayList<>();
-        final String rawGobal = PrefUtil.getString(requireContext(), Constants.PREFERENCE_COVID19_SUMMARY_GLOBAL);
-        final Global global = gson.fromJson(rawGobal, Global.class);
-
-        if (global != null) {
-            entries.add(new PieEntry(totalRecovered, "Recovered"));
-            entries.add(new PieEntry(totalDeaths, "Deaths"));
-            entries.add(new PieEntry(totalConfirmed - (totalRecovered + totalDeaths), "Active"));
-        }
+        entries.add(new PieEntry(totalRecovered, "Recovered"));
+        entries.add(new PieEntry(totalDeaths, "Deaths"));
+        entries.add(new PieEntry(totalConfirmed - (totalRecovered + totalDeaths), "Active"));
 
         final PieDataSet dataSet = new PieDataSet(entries, "Percentage Stats");
-
         dataSet.setDrawIcons(true);
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
@@ -283,7 +295,6 @@ public class StatisticsFragment extends Fragment {
         chartPie.setData(data);
         chartPie.highlightValues(null);
         chartPie.invalidate();
-        chartPie.setEntryLabelColor(Color.WHITE);
-        chartPie.setEntryLabelTextSize(12f);
+        chartPie.setDrawEntryLabels(false);
     }
 }

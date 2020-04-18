@@ -58,7 +58,7 @@ public class NinjaGlobalModel extends AndroidViewModel {
 
     public void fetchOnlineData() {
         disposable.add(Observable.fromCallable(() -> new NetworkTask()
-                .get("https://corona.lmao.ninja/all"))
+                .get("https://corona.lmao.ninja/v2/all"))
                 .subscribeOn(Schedulers.io())
                 .map(rawJSON -> gson.fromJson(rawJSON, Global.class))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -67,9 +67,9 @@ public class NinjaGlobalModel extends AndroidViewModel {
 
     private void saveDataToPreferences(Global global) {
         try {
-            PrefUtil.putString(getApplication(), Constants.PREFERENCE_NINJA_GLOBAL, gson.toJson(global));
-            PrefUtil.putBoolean(getApplication(), Constants.PREFERENCE_NINJA_GLOBAL_AVAILABLE, true);
-            PrefUtil.putLong(getApplication(), Constants.PREFERENCE_NINJA_GLOBAL_LAST_UPDATED, System.currentTimeMillis());
+            PrefUtil.putString(getApplication(), Constants.PREFERENCE_NINJA2_GLOBAL, gson.toJson(global));
+            PrefUtil.putBoolean(getApplication(), Constants.PREFERENCE_NINJA2_GLOBAL_AVAILABLE, true);
+            PrefUtil.putLong(getApplication(), Constants.PREFERENCE_NINJA2_GLOBAL_LAST_UPDATED, System.currentTimeMillis());
             data.setValue(true);
         } catch (Exception e) {
             data.setValue(false);

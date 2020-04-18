@@ -115,7 +115,7 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case Constants.PREFERENCE_NINJA_GLOBAL_LAST_UPDATED:
+            case Constants.PREFERENCE_NINJA2_GLOBAL_LAST_UPDATED:
                 updateDashboardData();
                 break;
         }
@@ -139,7 +139,7 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
 
     private void updateDashboardData() {
 
-        final String rawNinjaGlobal = PrefUtil.getString(requireContext(), Constants.PREFERENCE_NINJA_GLOBAL);
+        final String rawNinjaGlobal = PrefUtil.getString(requireContext(), Constants.PREFERENCE_NINJA2_GLOBAL);
         final Global global = gson.fromJson(rawNinjaGlobal, Global.class);
         
         txtTodayLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", Util.millisToTime(global.getUpdated())));
