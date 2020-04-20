@@ -282,8 +282,9 @@ public class StatisticsFragment extends Fragment {
         dataSet.setSelectionShift(5f);
 
         final ArrayList<Integer> colors = new ArrayList<>();
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
+        colors.add(getResources().getColor(R.color.colorGreen));
+        colors.add(getResources().getColor(R.color.colorRed));
+        colors.add(getResources().getColor(R.color.colorBlue));
 
         dataSet.setColors(colors);
         dataSet.setSelectionShift(0f);
