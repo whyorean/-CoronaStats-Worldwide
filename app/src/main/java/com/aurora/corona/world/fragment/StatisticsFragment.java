@@ -56,6 +56,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -148,12 +149,12 @@ public class StatisticsFragment extends Fragment {
         xAxis.setGranularity(1f);
         xAxis.setDrawLabels(true);
         xAxis.setTextColor(Color.WHITE);
-       /* xAxis.setValueFormatter(new ValueFormatter() {
+        xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 return historicalCombined.getCases().get((int) value).getDate();
             }
-        });*/
+        });
 
         chart.getAxisRight().setEnabled(false);
 
