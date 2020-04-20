@@ -272,7 +272,7 @@ public class StatisticsFragment extends Fragment {
         final ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(totalRecovered, "Recovered"));
         entries.add(new PieEntry(totalDeaths, "Deaths"));
-        entries.add(new PieEntry(totalConfirmed - (totalRecovered + totalDeaths), "Active"));
+        entries.add(new PieEntry(totalConfirmed, "New Cases"));
 
         final PieDataSet dataSet = new PieDataSet(entries, "Percentage Stats");
         dataSet.setDrawIcons(true);
